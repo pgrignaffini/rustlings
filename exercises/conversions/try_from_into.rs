@@ -23,8 +23,6 @@ enum IntoColorError {
     IntConversion,
 }
 
-// I AM NOT DONE
-
 // Your task is to complete this implementation
 // and return an Ok result of inner type Color.
 // You need to create an implementation for a tuple of three integers,
@@ -38,6 +36,13 @@ enum IntoColorError {
 impl TryFrom<(i16, i16, i16)> for Color {
     type Error = IntoColorError;
     fn try_from(tuple: (i16, i16, i16)) -> Result<Self, Self::Error> {
+        let range = 0..=255;
+        let (red,green,blue) = tuple;
+        if range.contains(&red) && range.contains(&green) && range.contains(&blue) {
+            return Ok(Color {red: red.try_into().unwrap(), green: green.try_into().unwrap(), blue: blue.try_into().unwrap()});
+        } else {
+            return Err(IntoColorError::IntConversion);
+        };
     }
 }
 
@@ -45,6 +50,12 @@ impl TryFrom<(i16, i16, i16)> for Color {
 impl TryFrom<[i16; 3]> for Color {
     type Error = IntoColorError;
     fn try_from(arr: [i16; 3]) -> Result<Self, Self::Error> {
+        let range = 0..=255;
+        if range.contains(&arr[0]) && range.contains(&arr[1]) && range.contains(&arr[2]) {
+            return Ok(Color {red: arr[0].try_into().unwrap(), green: arr[1].try_into().unwrap(), blue: arr[2].try_into().unwrap()});
+        } else {
+            return Err(IntoColorError::IntConversion);
+        };
     }
 }
 
@@ -52,6 +63,15 @@ impl TryFrom<[i16; 3]> for Color {
 impl TryFrom<&[i16]> for Color {
     type Error = IntoColorError;
     fn try_from(slice: &[i16]) -> Result<Self, Self::Error> {
+        println!("{} slice len", slice.len());
+        if (slice.len() == 3) {
+            let range = 0..=255;
+            if range.contains(&slice[0]) && range.contains(&slice[1]) && range.contains(&slice[2]) {
+                return Ok(Color {red: slice[0].try_into().unwrap(), green: slice[1].try_into().unwrap(), blue: slice[2].try_into().unwrap()});
+            } else {
+                return Err(IntoColorError::IntConversion);
+            };
+        } else { return Err(IntoColorError::BadLen); };
     }
 }
 
